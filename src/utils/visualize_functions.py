@@ -35,7 +35,7 @@ def get_color_labels(
     elif hue == "cool":
         hue_list = np.linspace(0.5, 0.8, n)
     else:
-        hue_list = np.linspace(0, 1, n, endpoint = False)
+        hue_list = np.linspace(0, 1, n, endpoint=False)
 
     # Create a list to store the color labels
     color_labels = []
@@ -49,8 +49,8 @@ def get_color_labels(
     if show_labels:
         # Show color labels
         plt.figure(figsize=(10, 5))
-        plt.scatter(np.linspace(0, n-1, n), np.zeros((n,)), c = color_labels)
-        plt.xticks(ticks = np.linspace(0, n-1, n))
+        plt.scatter(np.linspace(0, n - 1, n), np.zeros((n,)), c=color_labels)
+        plt.xticks(ticks=np.linspace(0, n - 1, n))
         plt.title("Show color labels")
         plt.show()
 
@@ -97,8 +97,9 @@ def get_color_labels_for_category(
         # Show color labels
         n_category = sum(n_category_list)
         plt.figure(figsize=(10, 5))
-        plt.scatter(np.linspace(0, n_category-1, n_category), np.zeros((n_category,)), c = color_labels)
-        plt.xticks(ticks = np.linspace(0, n_category-1, n_category))
+        plt.scatter(np.linspace(0, n_category - 1, n_category),
+                    np.zeros((n_category,)), c=color_labels)
+        plt.xticks(ticks=np.linspace(0, n_category - 1, n_category))
         plt.title("Show color labels")
         plt.show()
 
@@ -150,15 +151,16 @@ def show_heatmap(
     cbar_ticks_size = kwargs.get("cbar_ticks_size", 20)
     xticks_size = kwargs.get('xticks_size', 20)
     yticks_size = kwargs.get('yticks_size', 20)
-    cbar_format = kwargs.get('cbar_format', None)#"%.2e"
+    cbar_format = kwargs.get('cbar_format', None)  # "%.2e"
     cbar_label = kwargs.get('cbar_label', None)
     cbar_label_size = kwargs.get('cbar_label_size', 20)
+    colorbar_range = kwargs.get("colorbar_range", [0, 1])
     cmap = kwargs.get('cmap', 'cividis')
 
     ot_object_tick = kwargs.get("ot_object_tick", False)
     ot_category_tick = kwargs.get("ot_category_tick", False)
 
-    draw_category_line  = kwargs.get('draw_category_line', False)
+    draw_category_line = kwargs.get('draw_category_line', False)
     category_line_alpha = kwargs.get('category_line_alpha', 0.2)
     category_line_style = kwargs.get('category_line_style', 'dashed')
     category_line_color = kwargs.get('category_line_color', 'C2')
@@ -170,34 +172,41 @@ def show_heatmap(
     plt.rcParams["grid.color"] = "black"
     plt.rcParams['font.family'] = font
 
-    fig, ax = plt.subplots(figsize = figsize)
+    fig, ax = plt.subplots(figsize=figsize)
 
     if title is not None:
-        ax.set_title(title, size = title_size)
+        ax.set_title(title, size=title_size)
 
     aximg = ax.imshow(matrix, cmap=cmap, aspect='equal')
 
     if ot_object_tick and ot_category_tick:
-        raise(ValueError, "please turn off either 'ot_category_tick' or 'ot_object_tick'.")
+        raise (
+            ValueError, "please turn off either 'ot_category_tick' or 'ot_object_tick'.")
 
     if not ot_object_tick and ot_category_tick:
         assert category_name_list is not None
         assert num_category_list is not None
 
         if ticks == "objects":
-            plt.xticks(np.arange(sum(num_category_list)) + 0.5, labels = x_object_labels, rotation = xticks_rotation, size = xticks_size)
-            plt.yticks(np.arange(sum(num_category_list)) + 0.5, labels = y_object_labels, rotation = yticks_rotation, size = yticks_size)
+            plt.xticks(np.arange(sum(num_category_list)) + 0.5,
+                       labels=x_object_labels, rotation=xticks_rotation, size=xticks_size)
+            plt.yticks(np.arange(sum(num_category_list)) + 0.5,
+                       labels=y_object_labels, rotation=yticks_rotation, size=yticks_size)
 
         elif ticks == "category":
-            label_pos = [sum(num_category_list[:i + 1]) for i in range(len(category_name_list))]
-            plt.xticks(label_pos, labels = category_name_list, rotation = xticks_rotation, size = xticks_size, fontweight = "bold")
-            plt.yticks(label_pos, labels = category_name_list, rotation = yticks_rotation, size = yticks_size, fontweight = "bold")
+            label_pos = [sum(num_category_list[:i + 1])
+                         for i in range(len(category_name_list))]
+            plt.xticks(label_pos, labels=category_name_list,
+                       rotation=xticks_rotation, size=xticks_size, fontweight="bold")
+            plt.yticks(label_pos, labels=category_name_list,
+                       rotation=yticks_rotation, size=yticks_size, fontweight="bold")
 
             if draw_category_line:
                 for pos in label_pos:
-                    plt.axhline(pos, alpha = category_line_alpha, linestyle = category_line_style, color = category_line_color)
-                    plt.axvline(pos, alpha = category_line_alpha, linestyle = category_line_style, color = category_line_color)
-
+                    plt.axhline(pos, alpha=category_line_alpha,
+                                linestyle=category_line_style, color=category_line_color)
+                    plt.axvline(pos, alpha=category_line_alpha,
+                                linestyle=category_line_style, color=category_line_color)
 
     if ot_object_tick and not ot_category_tick:
         if ticks == "numbers":
@@ -206,24 +215,28 @@ def show_heatmap(
             pass
         elif ticks == "objects":
             # assert object_labels is not None
-            plt.xticks(ticks = np.arange(len(x_object_labels)), labels = x_object_labels, size = xticks_size, rotation = xticks_rotation)
-            plt.yticks(ticks = np.arange(len(y_object_labels)), labels = y_object_labels, size = yticks_size, rotation = yticks_rotation)
+            plt.xticks(ticks=np.arange(len(x_object_labels)),
+                       labels=x_object_labels, size=xticks_size, rotation=xticks_rotation)
+            plt.yticks(ticks=np.arange(len(y_object_labels)),
+                       labels=y_object_labels, size=yticks_size, rotation=yticks_rotation)
         elif ticks == "category":
-            raise(ValueError, "please use 'ot_category_tick = True'.")
+            raise (ValueError, "please use 'ot_category_tick = True'.")
 
     if not ot_object_tick and not ot_category_tick:
         plt.xticks([])
         plt.yticks([])
 
-    plt.xlabel(xlabel, size = xlabel_size)
-    plt.ylabel(ylabel, size = ylabel_size)
+    plt.xlabel(xlabel, size=xlabel_size)
+    plt.ylabel(ylabel, size=ylabel_size)
 
     divider = make_axes_locatable(ax)
     cax = divider.append_axes("right", size="5%", pad=0.1)
 
-    cbar = fig.colorbar(aximg, cax=cax, format = cbar_format)
-    cbar.set_label(cbar_label, size = cbar_label_size)
-    cbar.ax.tick_params(axis='y', labelsize = cbar_ticks_size)
+    cbar = fig.colorbar(aximg, cax=cax, format=cbar_format)
+    cbar.set_label(cbar_label, size=cbar_label_size)
+    cbar.ax.tick_params(axis='y', labelsize=cbar_ticks_size)
+    if colorbar_range is not None:
+        cbar.mappable.set_clim(colorbar_range[0], colorbar_range[1])
 
     plt.tight_layout()
 
@@ -273,7 +286,7 @@ class VisualizeEmbedding():
 
     def __init__(
         self,
-        embedding_list : List[np.ndarray],
+        embedding_list: List[np.ndarray],
         dim: int,
         method: Optional[str] = "PCA",
         method_params: Optional[dict] = None,
@@ -296,7 +309,8 @@ class VisualizeEmbedding():
         if category_idx_list is not None:
             category_concat_embedding_list = []
             for embedding in self.embedding_list:
-                concatenated_embedding = np.concatenate([embedding[category_idx_list[i]] for i in range(len(category_name_list))])
+                concatenated_embedding = np.concatenate(
+                    [embedding[category_idx_list[i]] for i in range(len(category_name_list))])
                 category_concat_embedding_list.append(concatenated_embedding)
             self.embedding_list = category_concat_embedding_list
 
@@ -304,9 +318,9 @@ class VisualizeEmbedding():
             method_params = {}
 
         self.embedding_list = self.apply_dim_reduction_to_embedding_list(
-            n_dim = dim,
-            method = method,
-            show_result = False,
+            n_dim=dim,
+            method=method,
+            show_result=False,
             **method_params
         )
 
@@ -339,19 +353,24 @@ class VisualizeEmbedding():
             low_embedding_list = self.embedding_list
 
         else:
-            emb_transformer = self.load_emb_transformer(method=method, n_dim=n_dim, **kwargs)
+            emb_transformer = self.load_emb_transformer(
+                method=method, n_dim=n_dim, **kwargs)
             n_object = self.embedding_list[0].shape[0]
-            embedding_list_cat = np.concatenate([self.embedding_list[i] for i in range(len(self.embedding_list))], axis = 0)
+            embedding_list_cat = np.concatenate(
+                [self.embedding_list[i] for i in range(len(self.embedding_list))], axis=0)
 
-            low_embedding_list = emb_transformer.fit_transform(embedding_list_cat)
-            low_embedding_list = [low_embedding_list[i*n_object:(i+1)*n_object] for i in range(len(self.embedding_list))]
+            low_embedding_list = emb_transformer.fit_transform(
+                embedding_list_cat)
+            low_embedding_list = [
+                low_embedding_list[i * n_object:(i + 1) * n_object] for i in range(len(self.embedding_list))]
 
         if show_result:
             assert method == "PCA", "show_result is only available for PCA."
             fig = plt.figure()
             ax = fig.add_subplot(1, 1, 1)
             plt.gca().get_xaxis().set_major_locator(ticker.MaxNLocator(integer=True))
-            ax.plot([0] + list(np.cumsum(emb_transformer.explained_variance_ratio_)), "-o")
+            ax.plot(
+                [0] + list(np.cumsum(emb_transformer.explained_variance_ratio_)), "-o")
             plt.xlabel("Number of principal components")
             plt.ylabel("Cumulative contribution rate")
             plt.grid()
@@ -376,7 +395,8 @@ class VisualizeEmbedding():
             emb_transformer = Isomap(n_components=n_dim, **kwargs)
 
         elif method == "MDS":
-            emb_transformer = MDS(n_components=n_dim, normalized_stress="auto", **kwargs)
+            emb_transformer = MDS(n_components=n_dim,
+                                  normalized_stress="auto", **kwargs)
 
         else:
             raise ValueError(f"Unknown embedding algorithm: {method}")
@@ -425,24 +445,27 @@ class VisualizeEmbedding():
 
         if color_labels is None:
             if self.num_category_list is None:
-                color_labels = get_color_labels(self.embedding_list[0].shape[0], hue = color_hue, show_labels = False)
+                color_labels = get_color_labels(
+                    self.embedding_list[0].shape[0], hue=color_hue, show_labels=False)
             else:
-                color_labels, main_colors = get_color_labels_for_category(self.num_category_list, min_saturation = 1, show_labels = False)
+                color_labels, main_colors = get_color_labels_for_category(
+                    self.num_category_list, min_saturation=1, show_labels=False)
 
         if markers_list is None:
-            markers_list = ['o', 'x', '^', 's', 'v', '<', '>', 'p', '*', 'h', 'H', '+', 'D', 'd', '.', ',', '1', '2', '3', '4', '_', '|'][:len(self.embedding_list)]
+            markers_list = ['o', 'x', '^', 's', 'v', '<', '>', 'p', '*', 'h', 'H', '+',
+                            'D', 'd', '.', ',', '1', '2', '3', '4', '_', '|'][:len(self.embedding_list)]
 
         plt.style.use("default")
         plt.rcParams["grid.color"] = "black"
         plt.rcParams['font.family'] = font
-        fig = plt.figure(figsize = figsize)
+        fig = plt.figure(figsize=figsize)
 
         if self.dim == 3:
             ax = fig.add_subplot(1, 1, 1, projection='3d')
-            ax.set_xlabel(xlabel, fontsize = xlabel_size)
-            ax.set_ylabel(ylabel, fontsize = ylabel_size)
-            ax.set_zlabel(zlabel, fontsize = zlabel_size)
-            ax.view_init(elev = 30, azim = 60)
+            ax.set_xlabel(xlabel, fontsize=xlabel_size)
+            ax.set_ylabel(ylabel, fontsize=ylabel_size)
+            ax.set_zlabel(zlabel, fontsize=zlabel_size)
+            ax.view_init(elev=30, azim=60)
             ax.xaxis.pane.fill = False
             ax.yaxis.pane.fill = False
             ax.zaxis.pane.fill = False
@@ -457,14 +480,15 @@ class VisualizeEmbedding():
 
         elif self.dim == 2:
             ax = fig.add_subplot(1, 1, 1)
-            ax.set_xlabel(xlabel, fontsize = xlabel_size)
-            ax.set_ylabel(ylabel, fontsize = ylabel_size)
+            ax.set_xlabel(xlabel, fontsize=xlabel_size)
+            ax.set_ylabel(ylabel, fontsize=ylabel_size)
 
         else:
             raise ValueError("'dim' is either 2 or 3")
 
         # Adjust the scale of the axis.
-        ax.get_proj = lambda: np.dot(Axes3D.get_proj(ax), np.diag([0.9, 0.9, 0.9, 1]))
+        ax.get_proj = lambda: np.dot(
+            Axes3D.get_proj(ax), np.diag([0.9, 0.9, 0.9, 1]))
 
         ax.grid(True)
         ax.xaxis.set_ticklabels([])
@@ -476,45 +500,49 @@ class VisualizeEmbedding():
             coords_i = self.embedding_list[i]
             if self.dim == 3:
                 im = ax.scatter(
-                    xs = coords_i[:, 0],
-                    ys = coords_i[:, 1],
-                    zs = coords_i[:, 2],
-                    marker = markers_list[i],
-                    c = color_labels,
-                    s = marker_size,
-                    alpha = 1,
+                    xs=coords_i[:, 0],
+                    ys=coords_i[:, 1],
+                    zs=coords_i[:, 2],
+                    marker=markers_list[i],
+                    c=color_labels,
+                    s=marker_size,
+                    alpha=1,
                     cmap=cmap,
                 )
 
-                ax.scatter([], [], [], marker = markers_list[i], color = "black", s = marker_size, alpha = 1, label = name_list[i].replace("_", " "))
+                ax.scatter([], [], [], marker=markers_list[i], color="black",
+                           s=marker_size, alpha=1, label=name_list[i].replace("_", " "))
 
             else:
                 im = ax.scatter(
-                    x = coords_i[:, 0],
-                    y = coords_i[:, 1],
-                    marker = markers_list[i],
-                    c = color_labels,
-                    s = marker_size,
-                    alpha = 1,
+                    x=coords_i[:, 0],
+                    y=coords_i[:, 1],
+                    marker=markers_list[i],
+                    c=color_labels,
+                    s=marker_size,
+                    alpha=1,
                     cmap=cmap,
                 )
 
-                ax.scatter(x = [], y = [], marker = markers_list[i], color = "black", s = marker_size, alpha = 1, label = name_list[i].replace("_", " "))
+                ax.scatter(x=[], y=[], marker=markers_list[i], color="black",
+                           s=marker_size, alpha=1, label=name_list[i].replace("_", " "))
 
         if self.category_name_list is not None:
             for i, category in enumerate(self.category_name_list):
                 if self.dim == 3:
-                    ax.scatter([], [], [], marker = "o", color = main_colors[i], s = marker_size, alpha = 1, label = category)
+                    ax.scatter([], [], [], marker="o", color=main_colors[i],
+                               s=marker_size, alpha=1, label=category)
 
                 else:
-                    ax.scatter(x = [], y = [], marker = "o", color = main_colors[i], s = marker_size, alpha = 1, label = category)
+                    ax.scatter(x=[], y=[], marker="o", color=main_colors[i],
+                               s=marker_size, alpha=1, label=category)
         ax.set_axisbelow(True)
 
         if legend:
-            ax.legend(fontsize = legend_size, loc = "best")
+            ax.legend(fontsize=legend_size, loc="best")
 
         if title is not None:
-            plt.title(title, fontsize = title_size)
+            plt.title(title, fontsize=title_size)
 
         if colorbar_label is not None:
             im.set_cmap(cmap)
